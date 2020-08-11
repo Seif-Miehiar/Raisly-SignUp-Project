@@ -9,11 +9,8 @@
           class="navbar-brand float-left"
           href="https://www.positronx.io"
           target="_blank"
-        >positronX.io</a>
+        >Raisly Job Application Mini Project</a>
         <ul class="nav navbar-nav flex-row float-right">
-          <li class="nav-item">
-            <router-link class="nav-link pr-3" to="/Login">Sign in</router-link>
-          </li>
           <li class="nav-item">
             <router-link class="btn btn-outline-primary" to="/">Sign up</router-link>
           </li>

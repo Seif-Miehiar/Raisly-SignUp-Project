@@ -3,21 +3,12 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
+// routes for our components
 const routes = [
   {
     path: '/',
     name: 'signup',
     component: () => import('../components/Signup.vue')
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import('../components/Login.vue')
-  },
-  {
-    path: '/forgot-password',
-    name: 'forgot-password',
-    component: () => import('../components/ForgotPassword.vue')
   }
 ]
 
