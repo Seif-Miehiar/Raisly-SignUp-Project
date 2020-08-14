@@ -1,6 +1,6 @@
 <template>
   <div class="vue-tempalte">
-    <form v-bind:for="`input-${$_uid}`" @submit.prevent="processForm" >
+    <form v-bind:for="`input-${$_uid}`" @submit.prevent="processForm" novalidate="true">
       <h3>Sign Up</h3>
 
       <div class="form-group">
@@ -22,8 +22,8 @@
         <input type="password" name="password" v-model="password" class="form-control form-control-lg" />
       </div>
 
-      <button type="submit" class="btn btn-dark btn-lg btn-block">Sign Up</button>
-
+      <button @click="checkForm" type="submit" class="btn btn-dark btn-lg btn-block">Sign Up</button>
+      <p v-if="errors.length"> <li v-for="error in errors" v-bind:key="error"> {{ error }} </li>
       <p class="forgot-password text-right">
         Already registered
         <router-link :to="{ name: 'login' }">sign in?</router-link>
@@ -58,7 +58,8 @@ export default {
       firstName: '',
       lastName: '',
       email: '',
-      password: ''
+      password: '',
+      errors: []
     }
   },
   methods: {
@@ -106,6 +107,31 @@ export default {
             })
           }
         }).catch(error => console.log(error))
+    },
+    checkForm: function (e) {
+      this.errors = []
+      if (!this.firstName) {
+        this.errors.push('First Name required.')
+      }
+      if (!this.lastName) {
+        this.errors.push('Last Name required.')
+      }
+      if (!this.email) {
+        this.errors.push('Email required.')
+      }
+      if (!this.password) {
+        this.errors.push('you forgot your password.')
+      } else if (!this.validEmail(this.email)) {
+        this.errors.push('Valid email required.')
+      }
+      if (!this.errors.length) {
+        return true
+      }
+      e.preventDefault()
+    },
+    validEmail: function (email) {
+      var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      return re.test(email)
     }
   }
 }
