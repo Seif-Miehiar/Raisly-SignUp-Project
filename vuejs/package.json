@@ -8,11 +8,14 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@sweetalert2/theme-dark": "^3.2.0",
     "axios": "^0.19.2",
     "bootstrap": "^4.5.2",
     "core-js": "^3.6.5",
+    "sweetalert2": "^9.17.1",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
+    "vue-simple-alert": "^1.1.1",
     "vue-uid": "^0.4.5",
     "vue-unique-id": "^3.1.1",
     "vue-uuid": "^2.0.2"

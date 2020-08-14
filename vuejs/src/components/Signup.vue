@@ -29,9 +29,9 @@
         <router-link :to="{ name: 'login' }">sign in?</router-link>
       </p>
     </form>
-<div id="app">
+<!-- <div id="app">
   {{ info }}
-</div>
+</div> -->
   </div>
 </template>
 
@@ -39,52 +39,77 @@
 import Vue from 'vue'
 import VueUid from 'vue-uid'
 import axios from 'axios'
+import VueSimpleAlert from 'vue-simple-alert'
+import Swal from 'sweetalert2'
 
 Vue.use(VueUid)
+Vue.use(VueSimpleAlert)
 
 // console.log(this.$VueUid)
 
 export default {
   name: 'Signup',
   el: '#app',
-  computed: {
-    id () {
-      console.log(this.$_uid)
-      return `input-${this.$_uid}` // e.g. input-1
-    }
-  },
+
   data () {
     return {
       info: null,
-      campaignUuid: '',
+      campaignUuid: null,
       firstName: '',
       lastName: '',
       email: '',
       password: ''
     }
   },
-  mounted () {
-    axios
-      .get('https://api.coindesk.com/v1/bpi/currentprice.json')
-      .then(response => (this.info = response.data.bpi))
-      .catch(error => console.log(error))
-  },
-
   methods: {
     processForm: function () {
-      var uuid = b()
-      var data = {
+      var uuid = '46aa3270-d2ee-11ea-a9f0-e9a68ccff42a'
+      var datas = {
         campaignUuid: uuid,
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-        password: this.password
+        data: {
+          firstName: this.firstName,
+          lastName: this.lastName,
+          email: this.email,
+          password: this.password
+        }
       }
-      console.log(data, this.email, '\n\n\n\n\n\n')
+      axios
+        .post('https://api.raisely.com/v3/check-user', { campaignUuid: uuid, data: { email: this.email } })
+        .then(response => {
+          if (response.data.data.status === 'OK') {
+            axios
+              .post('https://api.raisely.com/v3/signup', datas)
+              .then(response => {
+                if (response.status === 200) {
+                  Swal.fire({
+                    title: 'You Joined Us!!!!',
+                    text: 'you email was accepted, Welcome home!',
+                    icon: 'success',
+                    confirmButtonText: 'yay'
+                  })
+                }
+              })
+              .catch(e => {
+                Swal.fire({
+                  title: 'You are already signed up!',
+                  text: 'Your email is already registered',
+                  icon: 'info',
+                  confirmButtonText: 'OK'
+                })
+              })
+          } else {
+            Swal.fire({
+              title: 'Error!',
+              text: 'You are not validated, Please check your email',
+              icon: 'error',
+              confirmButtonText: 'Cool'
+            })
+          }
+        }).catch(error => console.log(error))
     }
   }
 }
-// this function will generate a random uuid once invoked.
-function b (a) { return a ? (a ^ Math.random() * 16 >> a / 4).toString(16) : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, b) }
+// this function will generate a random uuid once invoked. but the campaignUuid is fixed after testing with insomnia/postman
+// function b (a) { return a ? (a ^ Math.random() * 16 >> a / 4).toString(16) : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, b) }
 
 </script>
