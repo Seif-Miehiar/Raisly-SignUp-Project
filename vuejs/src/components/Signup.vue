@@ -63,8 +63,11 @@ export default {
     }
   },
   methods: {
+    // this function will read the data from the form and save it.
     processForm: function () {
+      // our fixed campaignUuid
       var uuid = '46aa3270-d2ee-11ea-a9f0-e9a68ccff42a'
+      // client data.
       var datas = {
         campaignUuid: uuid,
         data: {
@@ -74,14 +77,18 @@ export default {
           password: this.password
         }
       }
+      // this post method will work on sending data to the check user API to check if it is valid or not.
       axios
         .post('https://api.raisely.com/v3/check-user', { campaignUuid: uuid, data: { email: this.email } })
         .then(response => {
+          // checking if the response coming from the external API is valid or not.
           if (response.data.data.status === 'OK') {
             axios
+            // if the email is valid, we will send a post request to the sign up API.
               .post('https://api.raisely.com/v3/signup', datas)
               .then(response => {
                 if (response.status === 200) {
+                  // if the response status 200 we will show the client a pop up msg regarding the process is validated.
                   Swal.fire({
                     title: 'You Joined Us!!!!',
                     text: 'you email was accepted, Welcome home!',
@@ -90,6 +97,8 @@ export default {
                   })
                 }
               })
+              // if we receieved any error as a response from what we request,
+              // we will display it defining the issue in a cool way and direct.
               .catch(e => {
                 Swal.fire({
                   title: 'You are already signed up!',
@@ -99,6 +108,8 @@ export default {
                 })
               })
           } else {
+            // if there is an error with the request we will display it to the client
+            // in a nice way without showing him any status code as the user doesn't know what it means
             Swal.fire({
               title: 'Error!',
               text: 'You are not validated, Please check your email',
@@ -108,6 +119,7 @@ export default {
           }
         }).catch(error => console.log(error))
     },
+    // checkForm function will check if there is any empty input to notify the client before proceeding.
     checkForm: function (e) {
       this.errors = []
       if (!this.firstName) {
